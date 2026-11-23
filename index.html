@@ -148,7 +148,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ac);outline-offs
  <h2 id="how">Как это работает</h2>
  <div class="how"><div class="c"><span class="e">🧹</span>Вид уборки</div><div class="c"><span class="e">🏷️</span>Цена заранее</div><div class="c"><span class="e">📍</span>Фото и адрес</div><div class="c"><span class="e">📥</span>Заявка в кабинет</div></div>
  <h2 id="prices-h">Каталог и цены</h2>
- <div class="c"><p style="margin:0 0 12px">Поддерживающая, генеральная, после ремонта и большие объекты: все цены в одном месте.</p><button class="btn" data-go="services">Открыть каталог →</button></div>
+ <div class="c"><p style="margin:0 0 12px">Уборка, окна, сложные работы после ремонта и большие объекты: все цены в одном месте.</p><button class="btn" data-go="services">Открыть каталог →</button></div>
  <h2 id="zone">Зона работы</h2>
  <div class="c"><h3 id="area"></h3><p style="margin:0" id="hours"></p><a class="btn s hid" id="callBtn" style="margin-top:10px"></a></div>
 </section>
@@ -242,18 +242,22 @@ var SB=!!(CFG.url&&CFG.key);if(SB)CFG.url=CFG.url.replace(/\/+$/,"");
 
 try{if(localStorage.getItem("theme")=="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}
 var SHAPES={sofa:"Диван",chair:"Кресло",stool:"Стул",mat:"Матрас",rug:"Ковёр",other:"Другое (пуф)"};
-var ICON={sofa:"🧽",chair:"✨",stool:"🪟",mat:"🧱",rug:"🧶",other:"🏢",lamp:"💡"};
+var ICON={sofa:"🧽",chair:"✨",stool:"🪟",mat:"🧱",rug:"🧶",other:"🏢",lamp:"💡",film:"✂️",epoxy:"🪣",seam:"🔲"};
 var KINDS={friendly:"Дружелюбный",sleepy:"Сонный диван",funny:"Озорной диван",plain:"Мебель без лица и рук"};
 var CHCOL=["#4c5058","#b9bec8","#cdbba8","#9fb3cc","#a9c6b2","#d6b3c0"];
 var ACC=["#2563eb","#8b5cf6","#2f9e7a","#f97316","#db2777","#1e2f4d"];
-var DEF={brand:"Клининг от Любы",city:"Москва",phone:"",tagline:"Чистый дом.\nБез ваших хлопот.",
+var DEF={brand:"Клининг от Любы",city:"Москва",phone:"+7 925 378-10-51",tagline:"Чистый дом.\nБез ваших хлопот.",
  area:"Москва и Московская область",hours:"Ежедневно с 9:00 до 20:00. Работаем бригадами, со своей химией и оборудованием.",
  accent:"#e11d48",trip:0,dirty:20,min:0,out:0,
  items:[{k:"keep",n:"Поддерживающая",shape:"sofa",two:0,m2:[120,120],s:[["м²",0]]},
   {k:"gen",n:"Генеральная",shape:"chair",two:0,m2:[200,200],s:[["м²",0]]},
   {k:"rem",n:"После ремонта",shape:"mat",two:0,m2:[350,350],s:[["м²",0]]},
+  {k:"win",n:"Окна",shape:"stool",two:0,s:[["2 створки, стандарт",1000],["3 створки, стандарт",1500]]},
+  {k:"film",n:"Удаление плёнки с рам",shape:"film",two:0,s:[["1 пог. м",500]]},
+  {k:"epoxy",n:"Удаление эпоксидной затирки",shape:"epoxy",two:0,s:[["1 м²",2500]]},
+  {k:"seam",n:"Чистка межплиточных швов",shape:"seam",two:0,s:[["1 м²",300]]},
   {k:"big",n:"Большие объекты",shape:"other",two:0,photo:true,s:[["По фото",0]]}],
- ext:[],
+ ext:[["Холодильник внутри",1500],["Духовка внутри",1500],["Мытьё балкона",4000]],
  slots:{from:9,to:20,len:3,days:14,lead:3,crews:1,off:[],closed:[]},
  game:{on:false,disc:5,texts:["Я всё помню. Особенно тот кофе.","Ну вот, уже лучше!","Ещё чуть-чуть — и можно обниматься.","Чисто! Обнимашки!"]},
  char:{color:"#d6b3c0",kind:"friendly",lines:true}};
@@ -293,7 +297,7 @@ function cleanSlots(x){var D=DEF.slots,o={};x=(x&&typeof x=="object")?x:{};
 function cleanSet(d){var o={};d=(d&&typeof d=="object")?d:{};
  ["brand","city","area","hours"].forEach(function(k){o[k]=(typeof d[k]=="string"&&d[k].trim())?d[k].trim().slice(0,200):DEF[k]});
  o.tagline=(typeof d.tagline=="string"&&d.tagline.trim())?d.tagline.trim().slice(0,80):DEF.tagline;
- o.phone=(typeof d.phone=="string")?d.phone.trim().slice(0,30):"";
+ o.phone=(typeof d.phone=="string"&&d.phone.trim())?d.phone.trim().slice(0,30):DEF.phone;
  o.accent=(typeof d.accent=="string"&&/^#[0-9a-fA-F]{6}$/.test(d.accent))?d.accent:DEF.accent;
  o.trip=intIn(d.trip,0,100000,DEF.trip);o.dirty=intIn(d.dirty,0,200,DEF.dirty);o.min=intIn(d.min,0,1000000,DEF.min);o.out=intIn(d.out,0,100000,DEF.out);
  var it=[];(Array.isArray(d.items)?d.items:[]).forEach(function(x,i){
@@ -744,6 +748,7 @@ function svcRender(){
  $("svc").innerHTML=core.map(function(x){if(x.m2)return'<div class="c"><div class="sch"><div class="sci">'+(ICON[x.shape]||"")+'</div><div class="sct"><b>'+esc(x.n)+'</b><small>от '+x.m2[0]+' ₽ за м²</small></div></div><div class="vr"><span>Цена за м²</span><b>от '+(x.m2[0]==x.m2[1]?x.m2[0]:x.m2[0]+'–'+x.m2[1])+' ₽</b></div><div class="vr"><span class="mut">Например, 50 м²</span><span class="mut">'+(x.m2[0]==x.m2[1]?'от '+rub(50*x.m2[0]):rub(50*x.m2[0])+' – '+rub(50*x.m2[1]))+'</span></div><button class="btn s" data-k2="'+esc(x.k)+'" style="margin-top:12px">Рассчитать · '+esc(x.n.toLowerCase())+' →</button></div>';var mn=Math.min.apply(null,x.s.map(function(z){return z[1]}));
   return'<div class="c"><div class="sch"><div class="sci">'+(ICON[x.shape]||"")+'</div><div class="sct"><b>'+esc(x.n)+'</b><small>от '+rub(mn)+'</small></div></div>'
   +x.s.map(function(z){return'<div class="vr"><span>'+esc(z[0])+'</span><b>'+rub(z[1])+'</b></div>'}).join("")
+  +(x.k=="win"?'<p class="note" style="margin:8px 0 0">Зимой +15% к стоимости мытья окон.</p>':'')
   +(x.two?'<div class="vr"><span class="mut">С двух сторон</span><span class="mut">+'+x.two+'%</span></div>':'')
   +'<button class="btn s" data-k2="'+esc(x.k)+'" style="margin-top:12px">Рассчитать · '+esc(x.n.toLowerCase())+' →</button></div>'}).join("")
   +oth.map(function(x){return'<div class="c"><div class="sch"><div class="sci">'+(ICON[x.shape]||"⋯")+'</div><div class="sct"><b>Большие объекты</b><small>Цена по фото и площади</small></div></div><p style="margin:0 0 4px">Офисы, дома, таунхаусы, кафе, рестораны и объекты после ремонта. Опишите объект, укажите площадь и приложите фото: назовём цену.</p><button class="btn s" data-k2="'+esc(x.k)+'" style="margin-top:8px">Отправить фото →</button></div>'}).join("")
