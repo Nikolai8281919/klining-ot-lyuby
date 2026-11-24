@@ -137,7 +137,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ac);outline-offs
  <div class="c stage"><div id="stg"><canvas id="cv"></canvas></div><div class="bub" id="bub"></div><button class="rb" id="rst" aria-label="Повернуть заново">⟳</button><p class="hint">Потяните, чтобы повернуть</p>
   <div class="dock" id="items"></div></div></div>
  <div class="hr"><div class="c"><h3 id="itn" style="font-size:19px"></h3><p id="isel" style="font-size:13px;margin:-4px 0 10px"></p><div class="seg" id="sizes"></div>
-  <div id="m2box" class="hid"><label class="lab" for="m2in">Площадь квартиры, м²</label><input id="m2in" type="number" inputmode="numeric" min="10" max="1000" placeholder="Например, 54"></div>
+  <div id="m2box" class="hid"><label class="lab" for="m2in">Площадь, м²</label><input id="m2in" type="number" inputmode="numeric" min="10" max="1000" placeholder="Например, 54"></div>
   <div id="otherbox" class="hid" style="margin-top:12px"><label class="lab" for="otxt">Что за объект?</label><input id="otxt" maxlength="40" placeholder="Например: офис 300 м², коттедж" style="margin-bottom:4px"><p class="note" style="margin:0 0 4px">Укажите площадь и приложите до 3 фото — назовём цену.</p><div class="ph" id="bphs"></div><p class="err" id="bpherr" style="margin:0"></p></div>
   <label class="tgl hid" id="twol"><span>С двух сторон <small class="mut" id="twnote"></small></span><input type="checkbox" id="two"><span class="tg"></span></label>
   <label class="tgl" id="dirl"><span>Сильные загрязнения <small class="mut" id="dnote"></small></span><input type="checkbox" id="dirty"><span class="tg"></span></label>
@@ -148,7 +148,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ac);outline-offs
  <h2 id="how">Как это работает</h2>
  <div class="how"><div class="c"><span class="e">🧹</span>Вид уборки</div><div class="c"><span class="e">🏷️</span>Цена заранее</div><div class="c"><span class="e">📍</span>Фото и адрес</div><div class="c"><span class="e">📥</span>Заявка в кабинет</div></div>
  <h2 id="prices-h">Каталог и цены</h2>
- <div class="c"><p style="margin:0 0 12px">Уборка, окна, сложные работы после ремонта и большие объекты: все цены в одном месте.</p><button class="btn" data-go="services">Открыть каталог →</button></div>
+ <div class="c"><p style="margin:0 0 12px">Квартиры, дома, офисы, кафе, химчистка мебели и ковров: все цены в одном месте.</p><button class="btn" data-go="services">Открыть каталог →</button></div>
  <h2 id="zone">Зона работы</h2>
  <div class="c"><h3 id="area"></h3><p style="margin:0" id="hours"></p><a class="btn s hid" id="callBtn" style="margin-top:10px"></a></div>
 </section>
@@ -242,22 +242,27 @@ var SB=!!(CFG.url&&CFG.key);if(SB)CFG.url=CFG.url.replace(/\/+$/,"");
 
 try{if(localStorage.getItem("theme")=="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}
 var SHAPES={sofa:"Диван",chair:"Кресло",stool:"Стул",mat:"Матрас",rug:"Ковёр",other:"Другое (пуф)"};
-var ICON={sofa:"🧽",chair:"✨",stool:"🪟",mat:"🧱",rug:"🧶",other:"🏢",lamp:"💡",film:"✂️",epoxy:"🪣",seam:"🔲"};
+var ICON={sofa:"🧽",chair:"✨",stool:"🪟",mat:"🧱",rug:"🧶",other:"🏗️",lamp:"💡",film:"✂️",epoxy:"🪣",seam:"🔲",house:"🏡",couch:"🛋️",carpet:"🧶",office:"🏢",biz:"🪑"};
 var KINDS={friendly:"Дружелюбный",sleepy:"Сонный диван",funny:"Озорной диван",plain:"Мебель без лица и рук"};
 var CHCOL=["#4c5058","#b9bec8","#cdbba8","#9fb3cc","#a9c6b2","#d6b3c0"];
 var ACC=["#2563eb","#8b5cf6","#2f9e7a","#f97316","#db2777","#1e2f4d"];
 var DEF={brand:"Клининг от Любы",city:"Москва",phone:"+7 925 378-10-51",tagline:"Чистый дом.\nБез ваших хлопот.",
  area:"Москва и Московская область",hours:"Ежедневно с 9:00 до 20:00. Работаем бригадами, со своей химией и оборудованием.",
- accent:"#e11d48",trip:0,dirty:20,min:0,out:0,
- items:[{k:"keep",n:"Поддерживающая",shape:"sofa",two:0,m2:[120,120],s:[["м²",0]]},
-  {k:"gen",n:"Генеральная",shape:"chair",two:0,m2:[200,200],s:[["м²",0]]},
-  {k:"rem",n:"После ремонта",shape:"mat",two:0,m2:[350,350],s:[["м²",0]]},
-  {k:"win",n:"Окна",shape:"stool",two:0,s:[["2 створки, стандарт",1000],["3 створки, стандарт",1500]]},
+ accent:"#e11d48",trip:0,dirty:20,min:5000,out:0,
+ items:[{k:"keep",n:"Поддерживающая",shape:"sofa",two:0,s:[["1-комнатная",3600],["2-комнатная",5400],["3-комнатная",6700]]},
+  {k:"gen",n:"Генеральная",shape:"chair",two:0,s:[["1-комнатная",8500],["2-комнатная",11500],["3-комнатная",14500]]},
+  {k:"rem",n:"После ремонта",shape:"mat",two:0,m2:[250,250],mn:9000,s:[["м²",0]]},
+  {k:"house",n:"Дом / коттедж",shape:"house",two:0,m2:[0,0],o:[["Поддерживающая",130],["Генеральная",220],["После ремонта",280]],s:[["м²",0]]},
+  {k:"win",n:"Окна",shape:"stool",two:0,s:[["Стандартная створка",500],["Створка после ремонта",650]]},
+  {k:"him",n:"Химчистка мебели",shape:"couch",two:0,s:[["Диван 2-местный",5000],["Диван 3-местный",6800],["Диван угловой",7500],["Кресло тканевое",1000],["Кухонный уголок",3000],["Стул со спинкой",500],["Пуф",600],["Матрас 1-спальный (2 стороны)",2800],["Матрас 2-спальный (2 стороны)",4000]]},
+  {k:"carpet",n:"Ковры и ковролин",shape:"carpet",two:0,m2:[0,0],o:[["Ковролин",400],["Ковёр, ворс до 10 мм",400],["Ковёр, длинный ворс",550]],s:[["м²",0]]},
+  {k:"office",n:"Офисы, кафе, рестораны",shape:"office",two:0,m2:[0,0],o:[["Разовая уборка офиса",100],["Офис: 1–2 раза в неделю",60],["Офис: ежедневно",45],["Зал кафе/ресторана",70],["Зал и санузлы ежедневно",50],["Генеральная уборка офиса",150],["Генеральная уборка зала",150],["Кухня общепита",180],["Кухня с разбором оборудования",250],["Помещение после ремонта",250]],s:[["м²",0]]},
+  {k:"biz",n:"Химчистка для бизнеса",shape:"biz",two:0,s:[["Офисное кресло",800],["Кресло в зале кафе",800],["Диван в зоне ожидания",4000],["Стул со спинкой",500],["Кухонный уголок",5000]]},
   {k:"film",n:"Удаление плёнки с рам",shape:"film",two:0,s:[["1 пог. м",500]]},
   {k:"epoxy",n:"Удаление эпоксидной затирки",shape:"epoxy",two:0,s:[["1 м²",2500]]},
   {k:"seam",n:"Чистка межплиточных швов",shape:"seam",two:0,s:[["1 м²",300]]},
   {k:"big",n:"Большие объекты",shape:"other",two:0,photo:true,s:[["По фото",0]]}],
- ext:[["Холодильник внутри",1500],["Духовка внутри",1500],["Мытьё балкона",4000]],
+ ext:[["Холодильник внутри",1200],["Духовка внутри",1200],["Вытяжка",900],["Люстра (от, за 1 шт.)",500],["Радиатор (от, за 1 шт.)",400],["Мытьё балкона",4000],["Выведение запаха (химчистка)",800],["Обработка от пылевых клещей",500],["Защита ткани от пятен",900],["Оборудование общепита (за ед.)",1200]],
  slots:{from:9,to:20,len:3,days:14,lead:3,crews:1,off:[],closed:[]},
  game:{on:false,disc:5,texts:["Я всё помню. Особенно тот кофе.","Ну вот, уже лучше!","Ещё чуть-чуть — и можно обниматься.","Чисто! Обнимашки!"]},
  char:{color:"#d6b3c0",kind:"friendly",lines:true}};
@@ -541,12 +546,13 @@ function paint(){
 
 /* ================= корзина ================= */
 var CART=ld("cart",{lines:[],ex:[]});if(!CART||!Array.isArray(CART.lines))CART={lines:[],ex:[]};if(!Array.isArray(CART.ex))CART.ex=[];CART.out=!!CART.out;
-var barea=50,cur="sofa",bsz="",bdirty=false,btwo=false,btxt="",bqty=1,editIdx=null;
+var bopt="",barea=50,cur="sofa",bsz="",bdirty=false,btwo=false,btxt="",bqty=1,editIdx=null;
 function saveCart(){sv("cart",CART)}
-function area(label){var m=/^(\d+) м²$/.exec(String(label||""));return m?+m[1]:0}
-function rangeP(it,label,dirty){var a=area(label),f=dirty?1+SET.dirty/100:1;return[Math.round(a*it.m2[0]*f/100)*100,Math.round(a*it.m2[1]*f/100)*100]}
+function area(label){var m=/(\d+) м²$/.exec(String(label||""));return m?+m[1]:0}
+function m2r(it,label){if(it.o){var o=it.o.filter(function(z){return String(label||"").indexOf(z[0]+" · ")==0})[0];return o?[o[1],o[1]]:[0,0]}return it.m2}
+function rangeP(it,label,dirty){var a=area(label),f=dirty?1+SET.dirty/100:1,q=m2r(it,label),r=[Math.round(a*q[0]*f/100)*100,Math.round(a*q[1]*f/100)*100];if(it.mn&&a>0){r=[Math.max(r[0],it.mn),Math.max(r[1],it.mn)]}return r}
 function unitPrice(it,label,dirty,two){if(it.m2){var r=rangeP(it,label,dirty);return Math.round((r[0]+r[1])/2/100)*100}var p=0;it.s.forEach(function(z){if(z[0]==label)p=z[1]});if(it.photo)return 0;if(two&&it.two)p=p*(1+it.two/100);if(dirty)p=p*(1+SET.dirty/100);return Math.round(p)}
-function linfo(l){var it=itm(l.k);if(!it)return null;var ok=it.m2?area(l.sz)>0:it.s.some(function(z){return z[0]==l.sz});if(!ok)return null;var u=unitPrice(it,l.sz,l.dirty,l.two&&it.two);return{it:it,u:u,t:u*l.qty,pf:!!it.photo}}
+function linfo(l){var it=itm(l.k);if(!it)return null;var ok=it.m2?(area(l.sz)>0&&m2r(it,l.sz)[0]>0):it.s.some(function(z){return z[0]==l.sz});if(!ok)return null;var u=unitPrice(it,l.sz,l.dirty,l.two&&it.two);return{it:it,u:u,t:u*l.qty,pf:!!it.photo}}
 function lname(l,f){return f.pf?(l.txt||"Другое"):f.it.n+" · "+l.sz}
 function cartClean(){CART.lines=CART.lines.filter(function(l){return linfo(l)});CART.ex=CART.ex.filter(function(n){return EXT.some(function(e){return e[0]==n})})}
 function disc(){var g=SET.game;if(!g.on)return 0;var t=ld("gm",0);return(t&&Date.now()-t<864e5)?g.disc:0}
@@ -560,20 +566,20 @@ function cartPill(bump){var n=cartCount(),c=$("cn");c.textContent=n;c.classList.
 /* ================= выбор мебели ================= */
 function bUi(){
  var it=itm(cur)||ITEMS[0];cur=it.k;
- var M2=!!it.m2;if(M2){bsz=barea+" м²";bqty=1}else if(!it.s.some(function(z){return z[0]==bsz}))bsz=it.s[Math.min(1,it.s.length-1)][0];
+ var M2=!!it.m2;if(M2){if(it.o&&!it.o.some(function(z){return z[0]==bopt}))bopt=it.o[0][0];bsz=(it.o?bopt+" · ":"")+barea+" м²";bqty=1}else if(!it.s.some(function(z){return z[0]==bsz}))bsz=it.s[Math.min(1,it.s.length-1)][0];
  $("items").innerHTML=ITEMS.map(function(x){return'<button class="pl'+(x.k==cur?' on':'')+'" data-k="'+esc(x.k)+'"><i>'+(ICON[x.shape]||"•")+'</i>'+esc(x.n)+'</button>'}).join("");
  $("itn").textContent=it.n;$("isel").textContent=it.photo?"Цена по фото":it.n+" · "+bsz;
- $("sizes").innerHTML=it.s.map(function(z){return'<button data-z="'+esc(z[0])+'"'+(z[0]==bsz?' class="on"':'')+'>'+esc(z[0])+'</button>'}).join("");
+ $("sizes").innerHTML=(it.o?it.o.map(function(z){return'<button data-z="'+esc(z[0])+'"'+(z[0]==bopt?' class="on"':'')+'>'+esc(z[0])+' · '+z[1]+' ₽/м²</button>'}):it.s.map(function(z){return'<button data-z="'+esc(z[0])+'"'+(z[0]==bsz?' class="on"':'')+'>'+esc(z[0])+'</button>'})).join("");
  $("dirty").checked=bdirty;$("dnote").textContent=SET.dirty?"+"+SET.dirty+"%":"";
  var ph=!!it.photo;if(!it.two)btwo=false;
  $("twol").classList.toggle("hid",!it.two||ph);$("two").checked=btwo;$("twnote").textContent=it.two?"+"+it.two+"%":"";
- $("dirl").classList.toggle("hid",ph);$("otherbox").classList.toggle("hid",!ph);$("sizes").classList.toggle("hid",ph||M2);$("m2box").classList.toggle("hid",!M2);$("qrow").classList.toggle("hid",M2);if(M2&&document.activeElement!==$("m2in"))$("m2in").value=barea;if(ph)phRender();if($("otxt").value!==btxt)$("otxt").value=btxt;
+ $("dirl").classList.toggle("hid",ph);$("otherbox").classList.toggle("hid",!ph);$("sizes").classList.toggle("hid",ph||(M2&&!it.o));$("m2box").classList.toggle("hid",!M2);$("qrow").classList.toggle("hid",M2);if(M2&&document.activeElement!==$("m2in"))$("m2in").value=barea;if(ph)phRender();if($("otxt").value!==btxt)$("otxt").value=btxt;
  $("qv").textContent=bqty;$("qm").disabled=bqty<=1;
  var u=unitPrice(it,bsz,bdirty,btwo);var rg0=M2?rangeP(it,bsz,bdirty):null,one=M2&&rg0[0]==rg0[1];$("pv").textContent=ph?"По фото":(M2?(one?"от "+rub(u):"≈ "+rub(u)):rub(u*bqty));
- if(M2){var rg=rg0;$("pnote").innerHTML=one?"Предварительно<br>от "+it.m2[0]+" ₽ за м²":"Предварительно<br>от "+rub(rg[0])+" до "+rub(rg[1])}else $("pnote").innerHTML=ph?(PH.length?"Фото: "+PH.length+" из 3":"Цену назовём по фото"):"Предварительно"+(bqty>1?"<br>"+rub(u)+" × "+bqty:"");
+ if(M2){var rg=rg0;$("pnote").innerHTML=one?"Предварительно<br>от "+m2r(it,bsz)[0]+" ₽ за м²"+(it.mn?", минимум "+rub(it.mn):""):"Предварительно<br>от "+rub(rg[0])+" до "+rub(rg[1])}else $("pnote").innerHTML=ph?(PH.length?"Фото: "+PH.length+" из 3":"Цену назовём по фото"):"Предварительно"+(bqty>1?"<br>"+rub(u)+" × "+bqty:"");
  $("add").textContent=editIdx!==null?"Сохранить изменения →":"Добавить в заказ →"}
 $("items").onclick=function(e){var b=e.target.closest("[data-k]");if(!b)return;cur=b.dataset.k;editIdx=null;bUi();if(E1){showShape(E1,itm(cur).shape);E1.hop=1;LI=0;sayNext()}var on=$("items").querySelector(".on");if(on&&on.scrollIntoView)try{on.scrollIntoView({block:"nearest",inline:"center"})}catch(x){}};
-$("sizes").onclick=function(e){var b=e.target.closest("[data-z]");if(b){bsz=b.dataset.z;bUi()}};
+$("sizes").onclick=function(e){var b=e.target.closest("[data-z]");if(b){var it=itm(cur);if(it&&it.o)bopt=b.dataset.z;else bsz=b.dataset.z;bUi()}};
 $("dirty").onchange=function(){bdirty=$("dirty").checked;bUi()};
 $("m2in").oninput=function(){var v=Math.round(Number($("m2in").value));if(isFinite(v)&&v>=10&&v<=1000){barea=v;bUi()}};
 $("two").onchange=function(){btwo=$("two").checked;bUi()};
@@ -745,10 +751,10 @@ $("shx").onclick=function(){$("sheet").classList.add("hid")};
 function svcRender(){
  var core=ITEMS.filter(function(x){return!x.photo}),oth=ITEMS.filter(function(x){return x.photo});
  $("sfacts").innerHTML=(SET.min?'<span>Минимальный заказ '+rub(SET.min)+'</span>':'<span>Без минимального заказа</span>')+'<span>Выезд'+(SET.out?' по городу':'')+': '+(SET.trip?rub(SET.trip):'бесплатно')+'</span><span>Запись на удобное время</span>';
- $("svc").innerHTML=core.map(function(x){if(x.m2)return'<div class="c"><div class="sch"><div class="sci">'+(ICON[x.shape]||"")+'</div><div class="sct"><b>'+esc(x.n)+'</b><small>от '+x.m2[0]+' ₽ за м²</small></div></div><div class="vr"><span>Цена за м²</span><b>от '+(x.m2[0]==x.m2[1]?x.m2[0]:x.m2[0]+'–'+x.m2[1])+' ₽</b></div><div class="vr"><span class="mut">Например, 50 м²</span><span class="mut">'+(x.m2[0]==x.m2[1]?'от '+rub(50*x.m2[0]):rub(50*x.m2[0])+' – '+rub(50*x.m2[1]))+'</span></div><button class="btn s" data-k2="'+esc(x.k)+'" style="margin-top:12px">Рассчитать · '+esc(x.n.toLowerCase())+' →</button></div>';var mn=Math.min.apply(null,x.s.map(function(z){return z[1]}));
+ $("svc").innerHTML=core.map(function(x){if(x.o)return'<div class="c"><div class="sch"><div class="sci">'+(ICON[x.shape]||"")+'</div><div class="sct"><b>'+esc(x.n)+'</b><small>цены за м²</small></div></div>'+x.o.map(function(z){return'<div class="vr"><span>'+esc(z[0])+'</span><b>от '+z[1]+' ₽/м²</b></div>'}).join("")+'<button class="btn s" data-k2="'+esc(x.k)+'" style="margin-top:12px">Рассчитать · '+esc(x.n.toLowerCase())+' →</button></div>';if(x.m2)return'<div class="c"><div class="sch"><div class="sci">'+(ICON[x.shape]||"")+'</div><div class="sct"><b>'+esc(x.n)+'</b><small>от '+x.m2[0]+' ₽ за м²</small></div></div><div class="vr"><span>Цена за м²</span><b>от '+(x.m2[0]==x.m2[1]?x.m2[0]:x.m2[0]+'–'+x.m2[1])+' ₽</b></div><div class="vr"><span class="mut">Например, 50 м²</span><span class="mut">'+(x.m2[0]==x.m2[1]?'от '+rub(50*x.m2[0]):rub(50*x.m2[0])+' – '+rub(50*x.m2[1]))+'</span></div><button class="btn s" data-k2="'+esc(x.k)+'" style="margin-top:12px">Рассчитать · '+esc(x.n.toLowerCase())+' →</button></div>';var mn=Math.min.apply(null,x.s.map(function(z){return z[1]}));
   return'<div class="c"><div class="sch"><div class="sci">'+(ICON[x.shape]||"")+'</div><div class="sct"><b>'+esc(x.n)+'</b><small>от '+rub(mn)+'</small></div></div>'
   +x.s.map(function(z){return'<div class="vr"><span>'+esc(z[0])+'</span><b>'+rub(z[1])+'</b></div>'}).join("")
-  +(x.k=="win"?'<p class="note" style="margin:8px 0 0">Зимой +15% к стоимости мытья окон.</p>':'')
+  +(x.k=="win"?'<p class="note" style="margin:8px 0 0">Цена зависит от размера створки. Зимой +15%.</p>':'')+(x.k=="him"||x.k=="biz"?'<p class="note" style="margin:8px 0 0">Кожа, замша, алькантара: +40%.</p>':'')
   +(x.two?'<div class="vr"><span class="mut">С двух сторон</span><span class="mut">+'+x.two+'%</span></div>':'')
   +'<button class="btn s" data-k2="'+esc(x.k)+'" style="margin-top:12px">Рассчитать · '+esc(x.n.toLowerCase())+' →</button></div>'}).join("")
   +oth.map(function(x){return'<div class="c"><div class="sch"><div class="sci">'+(ICON[x.shape]||"⋯")+'</div><div class="sct"><b>Большие объекты</b><small>Цена по фото и площади</small></div></div><p style="margin:0 0 4px">Офисы, дома, таунхаусы, кафе, рестораны и объекты после ремонта. Опишите объект, укажите площадь и приложите фото: назовём цену.</p><button class="btn s" data-k2="'+esc(x.k)+'" style="margin-top:8px">Отправить фото →</button></div>'}).join("")
