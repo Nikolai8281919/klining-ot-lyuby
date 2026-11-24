@@ -2,8 +2,8 @@
 // Страница берётся из сети, а при отсутствии интернета из кэша.
 // Запросы к базе данных (Supabase) и любым другим сайтам сюда НЕ попадают:
 // данные заявок не кэшируются и всегда свежие.
-var CACHE = "luba-v1";
-var CORE = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "three.min.js",
+var CACHE = "luba-v3";
+var CORE = ["./", "index.html", "manifest.json", "icon-192.png.PNG", "icon-512.png.PNG", "three.min.js",
   "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"];
 
 self.addEventListener("install", function (e) {
